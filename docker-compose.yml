@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  base: &base
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        BUNDLE_WITHOUT: ''
+        RAILS_ENV: 'development'
+        RIALS_SERVE_STATIC_FILES: 'false'
+    tty: true
+    stdin_open: true
+    image: thesis:development
+    env_file: .env
+  rails:
+    <<: *base
+    build:
+      context: .
+      dockerfile: ./docker/app/dockerfiles/rails.Dockerfile
+    image: thesis-rails:development
+    volumes:
+      - ./:/app:delegated
+      - cache:/app/tmp/cache
+      - bundle:/usr/local/bundle
+    depends_on: 
+      - postgres
+    ports:
+      - 3000:3000
+    env_file: .env
+    environment: 
+      - RAILS_ENV=development
+    entrypoint: docker/app/entrypoints/rails.sh
+    command: ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]
+  postgres:
+    image: postgres:13
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres:/data/postgres
+    environment:
+      - POSTGRES_DB=thesis
+      - POSTGRES_USER=thesis
+      - POSTGRES_PASSWORD=thesis2580
+volumes:
+  postgres:
+  cache:
+  bundle:
