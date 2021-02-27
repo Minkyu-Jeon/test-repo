@@ -11,8 +11,10 @@ class ApplicationController < ActionController::API
 
   def handle_error(e)
     case e
+    when InvalidParameterError
+      render json: e.errors.reverse_merge(code: e.class::CODE), status: :bad_request
     when ParameterRequiredError
-      render json: { message: e.message }, status: :bad_request
+      render json: { code: e.class::CODE, message: e.message }, status: :bad_request
     end
   end
 end

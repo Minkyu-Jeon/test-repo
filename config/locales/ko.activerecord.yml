@@ -1,0 +1,21 @@
+ko:
+  activerecord:
+    models:
+      user: 사용자
+    attributes:
+      user:
+        id: 아이디
+        email: 이메일
+        password: 비밀번호
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              blank: 이메일을 입력해주세요
+              invalid: 이메일 형식이 올바르지 않습니다.
+              taken: 이미 사용중인 이메일입니다.
+            password:
+              blank: 비밀번호를 입력해주세요
+              invalid: 패스워드 형식이 올바르지 않습니다.
+      messages:
